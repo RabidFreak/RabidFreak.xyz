@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — RabidFreak</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Rabid<span>Freak</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="downloads.html" class="active">Downloads</a></li>
+    <li><a href="projects.html">Projects</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="page-header reveal">
+    <p class="eyebrow">// 02A — Gallery</p>
+    <h1>Featured <span class="hl">work.</span></h1>
+    <p>Highlighted public repositories — pulled live from GitHub, sorted by most recently updated.</p>
+  </div>
+
+  <section>
+    <div class="section-label">Gallery</div>
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" data-lang="all">All</button>
+    </div>
+    <div id="gallery-grid" class="gallery-grid">
+      <div class="loading">Loading gallery<span class="loading-dots"></span></div>
+    </div>
+  </section>
+
+  <section class="reveal" style="padding-top:2rem;">
+    <a href="projects.html"
+       style="display:inline-block; border:1px solid var(--border); padding:0.7rem 1.8rem;
+              font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+              color:var(--muted); text-decoration:none; transition:all 0.2s;"
+       onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)'"
+       onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">
+      View all projects →
+    </a>
+  </section>
+</main>
+
+<footer>
+  <span>© 2025 RabidFreak</span>
+  <a href="https://github.com/RabidFreak" target="_blank">github.com/RabidFreak</a>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => obs.observe(r));
+
+  const LANG_COLORS = {
+    JavaScript: '#f7df1e', TypeScript: '#3178c6', Python: '#3572A5',
+    HTML: '#e34c26', CSS: '#563d7c', Shell: '#89e051',
+    C: '#555555', 'C++': '#f34b7d', 'C#': '#178600',
+    Java: '#b07219', Go: '#00ADD8', Rust: '#dea584',
+    Ruby: '#701516', PHP: '#4F5D95', Swift: '#F05138',
+    Kotlin: '#A97BFF', Dart: '#00B4AB',
+  };
+
+  let allRepos = [];
+
+  function renderGallery(repos) {
+    const grid = document.getElementById('gallery-grid');
+    if (!repos.length) {
+      grid.innerHTML = '<div class="empty">No repositories match this filter.</div>';
+      return;
+    }
+    grid.innerHTML = repos.map((repo, i) => {
+      const color = LANG_COLORS[repo.language] || 'var(--accent2)';
+      const updated = new Date(repo.updated_at).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+      return `
+        <a href="${repo.html_url}" target="_blank" class="gallery-item reveal" style="transition-delay:${(i % 6) * 0.05}s">
+          <div class="gi-type">${repo.language || 'Misc'}</div>
+          <h3>${repo.name}</h3>
+          <div style="font-size:12px; color:var(--muted); line-height:1.6;">${repo.description || '—'}</div>
+          <div class="gi-link">
+            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${color}; margin-right:6px; vertical-align:middle;"></span>
+            Updated ${updated} &nbsp;·&nbsp; ★ ${repo.stargazers_count}
+          </div>
+        </a>`;
+    }).join('');
+
+    document.querySelectorAll('.gallery-item.reveal').forEach(el => obs.observe(el));
+  }
+
+  function buildFilters(repos) {
+    const langs = [...new Set(repos.map(r => r.language).filter(Boolean))];
+    const bar = document.getElementById('filter-bar');
+    langs.forEach(lang => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.dataset.lang = lang;
+      btn.textContent = lang;
+      bar.appendChild(btn);
+    });
+
+    bar.addEventListener('click', e => {
+      if (!e.target.classList.contains('filter-btn')) return;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      const lang = e.target.dataset.lang;
+      const filtered = lang === 'all' ? allRepos : allRepos.filter(r => r.language === lang);
+      renderGallery(filtered);
+    });
+  }
+
+  async function loadGallery() {
+    try {
+      const res = await fetch('https://api.github.com/users/RabidFreak/repos?sort=updated&per_page=100');
+      allRepos = await res.json();
+      if (!Array.isArray(allRepos) || !allRepos.length) {
+        document.getElementById('gallery-grid').innerHTML = '<div class="empty">No public repositories found.</div>';
+        return;
+      }
+      buildFilters(allRepos);
+      renderGallery(allRepos);
+    } catch (e) {
+      document.getElementById('gallery-grid').innerHTML =
+        '<div class="empty">Could not load repositories.</div>';
+    }
+  }
+
+  loadGallery();
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RabidFreak — Developer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Rabid<span>Freak</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="downloads.html">Downloads</a></li>
+    <li><a href="projects.html">Projects</a></li>
+  </ul>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="hero-grid-bg"></div>
+    <p class="hero-eyebrow">// github.com/RabidFreak</p>
+    <h1>
+      Building
+      <span class="big-accent">things.</span>
+    </h1>
+    <p class="hero-sub">
+      Open source projects, experiments, and tools.
+      Explore the work, grab the downloads, or dive into the code.
+    </p>
+
+    <div class="hero-nav-cards">
+      <a href="index.html" class="hero-nav-card">
+        <div class="num">01</div>
+        <div class="title">Home</div>
+        <div class="desc">Start here</div>
+      </a>
+      <a href="downloads.html" class="hero-nav-card">
+        <div class="num">02</div>
+        <div class="title">Downloads</div>
+        <div class="desc">Gallery &amp; projects</div>
+      </a>
+      <a href="projects.html" class="hero-nav-card">
+        <div class="num">03</div>
+        <div class="title">Projects</div>
+        <div class="desc">All repos, live</div>
+      </a>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="section-label">About</div>
+    <div style="max-width:560px;">
+      <p style="font-size:13px; color:var(--muted); line-height:1.9; margin-bottom:1.5rem;">
+        This site pulls directly from GitHub — every project you see is live and up to date.
+        No manual updates, no stale lists.
+      </p>
+      <a href="https://github.com/RabidFreak" target="_blank"
+         style="display:inline-block; border:1px solid var(--border); padding:0.6rem 1.5rem;
+                font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+                color:var(--muted); text-decoration:none; transition:all 0.2s;">
+        View on GitHub ↗
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>© 2025 RabidFreak</span>
+  <a href="https://github.com/RabidFreak" target="_blank">github.com/RabidFreak</a>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => obs.observe(r));
+</script>
+</body>
+</html>

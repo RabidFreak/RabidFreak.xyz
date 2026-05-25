@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloads — RabidFreak</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Rabid<span>Freak</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="downloads.html" class="active">Downloads</a></li>
+    <li><a href="projects.html">Projects</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="page-header reveal">
+    <p class="eyebrow">// 02 — Downloads</p>
+    <h1>Get the <span class="hl">stuff.</span></h1>
+    <p>Two places to explore — a gallery of highlighted work and the full project archive, both pulled live from GitHub.</p>
+  </div>
+
+  <section class="reveal">
+    <div class="section-label">Choose a section</div>
+    <div class="downloads-grid">
+      <a href="gallery.html" class="dl-card">
+        <div class="dl-icon">GL</div>
+        <h3>Gallery</h3>
+        <p>Highlighted repos and featured work — curated from public projects.</p>
+      </a>
+      <a href="projects.html" class="dl-card">
+        <div class="dl-icon">PR</div>
+        <h3>Projects</h3>
+        <p>The full archive — every public repository, sortable and filterable.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="section-label">Latest from GitHub</div>
+    <div id="latest-repos" class="repo-grid">
+      <div class="loading">Fetching repos<span class="loading-dots"></span></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>© 2025 RabidFreak</span>
+  <a href="https://github.com/RabidFreak" target="_blank">github.com/RabidFreak</a>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => obs.observe(r));
+
+  const LANG_COLORS = {
+    JavaScript: '#f7df1e', TypeScript: '#3178c6', Python: '#3572A5',
+    HTML: '#e34c26', CSS: '#563d7c', Shell: '#89e051',
+    C: '#555555', 'C++': '#f34b7d', 'C#': '#178600',
+    Java: '#b07219', Go: '#00ADD8', Rust: '#dea584',
+    Ruby: '#701516', PHP: '#4F5D95', Swift: '#F05138',
+    Kotlin: '#A97BFF', Dart: '#00B4AB',
+  };
+
+  async function loadLatest() {
+    try {
+      const res = await fetch('https://api.github.com/users/RabidFreak/repos?sort=updated&per_page=6');
+      const repos = await res.json();
+      const container = document.getElementById('latest-repos');
+
+      if (!repos.length) {
+        container.innerHTML = '<div class="empty">No public repositories found.</div>';
+        return;
+      }
+
+      container.innerHTML = repos.map(repo => {
+        const color = LANG_COLORS[repo.language] || 'var(--accent)';
+        const desc = repo.description || 'No description provided.';
+        return `
+          <a href="${repo.html_url}" target="_blank" class="repo-card">
+            <div class="repo-name">${repo.name}</div>
+            <div class="repo-desc">${desc}</div>
+            <div class="repo-footer">
+              ${repo.language ? `<span class="repo-lang"><span class="lang-dot" style="background:${color}"></span>${repo.language}</span>` : ''}
+              <span>★ ${repo.stargazers_count}</span>
+              <span>⑂ ${repo.forks_count}</span>
+            </div>
+          </a>`;
+      }).join('');
+    } catch (e) {
+      document.getElementById('latest-repos').innerHTML =
+        '<div class="empty">Could not load repositories. Check your connection.</div>';
+    }
+  }
+
+  loadLatest();
+</script>
+</body>
+</html>
