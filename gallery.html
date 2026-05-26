@@ -119,14 +119,14 @@
       const res = await fetch('https://api.github.com/users/RabidFreak/repos?sort=updated&per_page=100');
       allRepos = await res.json();
       if (!Array.isArray(allRepos) || !allRepos.length) {
-        document.getElementById('gallery-grid').innerHTML = '<div class="empty">No public repositories found.</div>';
+        document.getElementById('gallery-grid').innerHTML = '<div class="empty">Repo is fucked</div>';
         return;
       }
       buildFilters(allRepos);
       renderGallery(allRepos);
     } catch (e) {
       document.getElementById('gallery-grid').innerHTML =
-        '<div class="empty">Could not load repositories.</div>';
+        '<div class="empty">Either your internet is fucked or my website is..</div>';
     }
   }
 
