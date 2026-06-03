@@ -12,7 +12,6 @@
       width: 100vw;
       height: 100vh;
       font-family: 'Arial Black', sans-serif;
-      cursor: none;
     }
 
     #logo {
@@ -54,24 +53,29 @@
       position: fixed;
       top: 1.5rem;
       left: 2rem;
-      font-size: 10px;
-      letter-spacing: 0.2em;
+      font-size: 13px;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.7);
       font-family: monospace;
-      background: none;
-      border: none;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.5rem 1.2rem;
       cursor: pointer;
-      transition: color 0.2s;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
     }
-    #exit-btn:hover { color: rgba(255,255,255,0.5); }
+    #exit-btn:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.5);
+    }
   </style>
 </head>
 <body>
 
 <div id="logo">
   <span class="top">RabidFreak</span>
-  
+  <span class="sub">est. the cave</span>
 </div>
 
 <div id="corner-flash"></div>
