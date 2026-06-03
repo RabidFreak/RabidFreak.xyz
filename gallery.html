@@ -154,6 +154,12 @@
 </head>
 <body>
 
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="downloads.html">Downloads</a>
+  <a href="projects.html">Projects</a>
+</div>
+
 <nav>
   <a href="index.html" class="nav-logo">Rabid<span>Freak</span></a>
   <ul class="nav-links">
@@ -161,6 +167,7 @@
     <li><a href="downloads.html" class="active">Downloads</a></li>
     <li><a href="projects.html">Projects</a></li>
   </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <main>
@@ -338,6 +345,23 @@
   }
 
   loadGallery();
+</script>
+<script>
+  // Hamburger
+  const _hb = document.getElementById("hamburger");
+  const _mm = document.getElementById("mobile-menu");
+  _hb.addEventListener("click", () => { _hb.classList.toggle("open"); _mm.classList.toggle("open"); });
+  _mm.querySelectorAll("a").forEach(a => a.addEventListener("click", () => { _hb.classList.remove("open"); _mm.classList.remove("open"); }));
+
+  // Logo 5-tap easter egg
+  const _logo = document.querySelector(".nav-logo");
+  let _tc = 0, _tt = null;
+  _logo.addEventListener("click", e => {
+    e.preventDefault(); _tc++;
+    if (_tt) clearTimeout(_tt);
+    if (_tc >= 5) { _tc = 0; window.location.href = "passcode.html"; return; }
+    _tt = setTimeout(() => { _tc = 0; window.location.href = "index.html"; }, 600);
+  });
 </script>
 </body>
 </html>
