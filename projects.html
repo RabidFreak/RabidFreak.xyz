@@ -11,7 +11,7 @@
 <div class="mobile-menu" id="mobile-menu">
   <a href="index.html">Home</a>
   <a href="downloads.html">Downloads</a>
-  <a href="projects.html">Projects</a>
+  <a href="projects.html" class="active">Projects</a>
 </div>
 
 <nav>
@@ -173,23 +173,39 @@
 
   loadProjects();
 </script>
+
 <script>
   // Hamburger
-  const _hb = document.getElementById("hamburger");
-  const _mm = document.getElementById("mobile-menu");
-  _hb.addEventListener("click", () => { _hb.classList.toggle("open"); _mm.classList.toggle("open"); });
-  _mm.querySelectorAll("a").forEach(a => a.addEventListener("click", () => { _hb.classList.remove("open"); _mm.classList.remove("open"); }));
+  (function() {
+    var hb = document.getElementById('hamburger');
+    var mm = document.getElementById('mobile-menu');
+    if (!hb || !mm) return;
+    hb.addEventListener('click', function() {
+      hb.classList.toggle('open');
+      mm.classList.toggle('open');
+    });
+    mm.querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        hb.classList.remove('open');
+        mm.classList.remove('open');
+      });
+    });
+  })();
 
   // Logo 5-tap easter egg
-  const _logo = document.querySelector(".nav-logo");
-  let _tc = 0, _tt = null;
-  _logo.addEventListener("click", e => {
-    e.preventDefault(); _tc++;
-    if (_tt) clearTimeout(_tt);
-    if (_tc >= 5) { _tc = 0; window.location.href = "passcode.html"; return; }
-    _tt = setTimeout(() => { _tc = 0; window.location.href = "index.html"; }, 600);
-  });
+  (function() {
+    var logo = document.querySelector('.nav-logo');
+    if (!logo) return;
+    var tc = 0, tt = null;
+    logo.addEventListener('click', function(e) {
+      e.preventDefault();
+      tc++;
+      if (tt) clearTimeout(tt);
+      if (tc >= 5) { tc = 0; window.location.href = 'passcode.html'; return; }
+      tt = setTimeout(function() { tc = 0; window.location.href = 'index.html'; }, 600);
+    });
+  })();
 </script>
+
 </body>
 </html>
-//please deploy its 2 in the fucking morining
